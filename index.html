@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media and Survey Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+        }
+        #main-page {
+            background-image: url('https://images.pexels.com/photos/3784566/pexels-photo-3784566.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'); /* Ganti dengan URL gambar Anda */
+            background-size: cover;
+            background-position: all;
+            padding: 20px;
+            border-radius: 35px;
+        }
+        .media-section, .survey-section {
+            margin-top: 30px;
+        }
+        .survey-section {
+            display: none;
+        }
+        .survey-data {
+            margin-top: 30px;
+        }
+        .overlay {
+            background: rgba(255, 255, 255, 0.8); /* Warna overlay dengan transparansi */
+            padding: 20px;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Halaman Utama -->
+        <div id="main-page">
+            <div class="overlay text-center">
+                <h1 class="display-4">Welcome to Our Media Page</h1>
+                <p class="lead">Explore our carefully curated collection of audio, video, and images that are interrelated.</p>
+            </div>
+
+            <div class="media-section overlay">
+                <h2>About Our Media</h2>
+                <p>
+                    Our media content is designed to provide a comprehensive experience. The audio, video, and images are all related to the theme of 'Nature and Serenity'. 
+                    Enjoy soothing sounds, breathtaking videos, and stunning images that take you closer to nature.
+                </p>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Audio</h3>
+                        <audio controls>
+                            <source src="videoplayback.m4a" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <p>Relaxing nature sounds to calm your mind.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Video</h3>
+                        <video width="100%" controls>
+                            <source src="Sesaat Kau Hadir.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p>A beautiful journey through lush forests and serene landscapes.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Images</h3>
+                        <img src="maxresdefault.jpg" class="img-fluid" alt="Nature Image">
+                        <p>Captivating images of nature's beauty.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button onclick="showSurvey()" class="btn btn-primary btn-lg">Take the Survey</button>
+            </div>
+        </div>
+
+        <!-- Halaman Survey -->
+        <div id="survey-page" class="survey-section">
+            <h1 class="mt-5">Survey</h1>
+            <form id="survey-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedback">Feedback</label>
+                    <textarea class="form-control" id="feedback" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+
+            <div class="survey-data mt-5">
+                <h2>Survey Data</h2>
+                <ul id="survey-list" class="list-group">
+                </ul>
+                <button onclick="clearSurveyData()" class="btn btn-danger mt-3">Clear Survey Data</button>
+            </div>
+
+            <div class="text-center mt-3">
+                <button onclick="showMainPage()" class="btn btn-secondary">Back to Main Page</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSurvey() {
+            document.getElementById('main-page').style.display = 'none';
+            document.getElementById('survey-page').style.display = 'block';
+            displaySurveyData();
+        }
+
+        function showMainPage() {
+            document.getElementById('survey-page').style.display = 'none';
+            document.getElementById('main-page').style.display = 'block';
+        }
+
+        function saveSurveyData(name, email, feedback) {
+            const surveyData = JSON.parse(localStorage.getItem('surveyData')) || [];
+            surveyData.push({ name, email, feedback });
+            localStorage.setItem('surveyData', JSON.stringify(surveyData));
+        }
+
+        function displaySurveyData() {
+            const surveyData = JSON.parse(localStorage.getItem('surveyData')) || [];
+            const surveyList = document.getElementById('survey-list');
+            surveyList.innerHTML = '';
+            surveyData.forEach((data, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.innerHTML = `Name: ${data.name}, Email: ${data.email}, Feedback: ${data.feedback}`;
+                surveyList.appendChild(listItem);
+            });
+        }
+
+        function clearSurveyData() {
+            localStorage.removeItem('surveyData');
+            displaySurveyData();
+        }
+
+        document.getElementById('survey-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const feedback = document.getElementById('feedback').value;
+            saveSurveyData(name, email, feedback);
+            displaySurveyData();
+            document.getElementById('survey-form').reset();
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
